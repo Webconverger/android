@@ -18,6 +18,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.content.ComponentName;
+
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -133,8 +135,10 @@ public class MainActivity extends Activity {
 
         if (mDPM.isDeviceOwnerApp(this.getPackageName())) {
             Log.d(TAG, "isDeviceOwnerApp: YES");
-            String[] packages = {this.getPackageName()};
-            //mDPM.setLockTaskPackages(mDeviceAdminSample, packages);
+            ComponentName componentName = BasicDeviceAdminReceiver.getComponentName(this);
+            Log.d(TAG, this.getPackageName());
+            // TODO: Catch security exception if device Administrator not toggled
+            mDPM.setLockTaskPackages(componentName, new String[]{this.getPackageName()});
         } else {
             Log.d(TAG, "isDeviceOwnerApp: NO");
         }
