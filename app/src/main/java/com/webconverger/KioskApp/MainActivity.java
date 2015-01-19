@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -253,7 +254,16 @@ public class MainActivity extends Activity {
 
             mloadingView.setVisibility(View.GONE);
 
-            // TODO: Renew WebView
+            // TODO: Ensure Webview reset to a clean slate
+            // Work out other possible "fingerprinting" to be avoided
+            mWebView.clearCache(true);
+            mWebView.clearHistory();
+            mWebView.clearFormData();
+
+            // http://developer.android.com/reference/android/webkit/CookieManager.html
+            CookieManager cm = CookieManager.getInstance();
+            cm.removeAllCookies(null);
+            // The slate must be clean
 
             mWebView.setVisibility(View.VISIBLE);
             // Log.d(TAG, result.toString());
