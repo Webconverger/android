@@ -103,10 +103,17 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "Reset");
         switch (item.getItemId()) {
             case R.id.action_reset:
+                Log.d(TAG, "Action reset");
                 new ConfigParser().execute();
+                return true;
+            case R.id.action_unlock:
+                Log.d(TAG, "Action unlock");
+                ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+                if (activityManager.isInLockTaskMode()) {
+                    stopLockTask();
+                }
                 return true;
             default:
                 return true;
