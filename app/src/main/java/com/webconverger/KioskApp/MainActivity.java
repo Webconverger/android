@@ -116,8 +116,11 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "Back pressed <--- does not trigger when unlocked pinned App");
-        super.onBackPressed();
+        if (mWebView.canGoBack() == true) {
+            mWebView.goBack();
+        } else {
+            MainActivity.super.onBackPressed();
+        }
     }
 
     @Override
