@@ -3,7 +3,10 @@ package com.webconverger.KioskApp;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,8 +21,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.content.ComponentName;
-
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -38,12 +39,19 @@ public class MainActivity extends Activity {
     private final String HOMEPAGE = "homepage";
     private WebView mWebView;
     private ImageView mloadingView;
+    private String ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         // Not sure about this
         super.onCreate(savedInstanceState);
+
+        WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        String macAddress = info.getMacAddress();
+        ID = Build.SERIAL + ';' + macAddress;
+        Log.d(TAG, "ID is: " + ID);
 
         // Keep screen on
         // Assuming deployment will be on a mounted Android device with power
@@ -79,7 +87,7 @@ public class MainActivity extends Activity {
 
 
         // Flash id
-        Toast.makeText(this, Build.SERIAL, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, ID, Toast.LENGTH_LONG).show();
 
     }
 
@@ -167,7 +175,7 @@ public class MainActivity extends Activity {
             HttpURLConnection urlConnection = null;
 
             try {
-                final URL configUrl = new URL("https://config.webconverger.com/clients/install-config/" + Build.SERIAL);
+                final URL configUrl = new URL("https://config.webconverger.com/clients/install-config/" + ID);
                 urlConnection = (HttpURLConnection) configUrl.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 homePageUrl = parseINI(in);
@@ -226,7 +234,7 @@ public class MainActivity extends Activity {
         protected void onPostExecute(URL result) {
             if (result == null) {
                 try {
-                    result = new URL("https://config.webconverger.com/clients/?id=" + Build.SERIAL);
+                    result = new URL("https://config.webconverger.com/clients/?id=" + ID);
                 } catch (MalformedURLException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
