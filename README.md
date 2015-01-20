@@ -1,3 +1,5 @@
+**UNDER DEVELOPMENT** -- NOT FOR USE YET
+
 # Why is Webconverger better than the competition?
 
 * Opensource - absolutely transparent. Calling for peer preview. Accountable. Trustworthy. Leading Opensource kiosk effort since 2007.
