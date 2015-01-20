@@ -22,7 +22,7 @@ import java.util.Properties;
 
 public class MainActivity extends Activity {
 
-    private static final String PACKAGE_NAME = "com.webconverger.firstapp";
+    private static final String PACKAGE_NAME = "com.webconverger.myfirstapp";
     private static final String PACKAGE_DOWNLOAD_LOCATION = "http://sg.webconverger.com/com.webconverger.myfirstapp.apk";
 
     @Override
