@@ -22,8 +22,8 @@ import java.util.Properties;
 
 public class MainActivity extends Activity {
 
-    private static final String PACKAGE_NAME = "com.webconverger.myfirstapp";
-    private static final String PACKAGE_DOWNLOAD_LOCATION = "http://sg.webconverger.com/com.webconverger.myfirstapp.apk";
+    private static final String PACKAGE_NAME = "com.webconverger.KioskApp";
+    private static final String PACKAGE_DOWNLOAD_LOCATION = "http://sg.webconverger.com/com.webconverger.KioskApp.apk";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

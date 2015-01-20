@@ -58,6 +58,8 @@ public class MainActivity extends Activity {
         // Assuming deployment will be on a mounted Android device with power
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        // TODO: Disable keyguard
+
         // Setup layout
         setContentView(R.layout.activity_main);
 
