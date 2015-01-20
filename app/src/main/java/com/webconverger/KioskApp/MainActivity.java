@@ -242,6 +242,9 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(URL result) {
+
+            // TODO: Cache result/config in case kiosk loses internet (Same behaviour as PC version)
+
             if (result == null) {
                 try {
                     result = new URL("https://config.webconverger.com/clients/?id=" + ID);

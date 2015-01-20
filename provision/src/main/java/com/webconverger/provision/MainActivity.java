@@ -23,6 +23,7 @@ import java.util.Properties;
 public class MainActivity extends Activity {
 
     private static final String PACKAGE_NAME = "com.webconverger.KioskApp";
+    // TODO: Figure out how to integrate with Play store perhaps and ensure smooth upgrades
     private static final String PACKAGE_DOWNLOAD_LOCATION = "http://sg.webconverger.com/com.webconverger.KioskApp.apk";
 
     @Override
