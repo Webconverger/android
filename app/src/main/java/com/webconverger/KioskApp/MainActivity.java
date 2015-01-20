@@ -147,9 +147,6 @@ public class MainActivity extends Activity {
 
         super.onResume();
 
-
-        //log.d(TAG, activityManager.isLockTaskPermitted("com.webconverger.myfirstapp");
-
         DevicePolicyManager mDPM = null;
         mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         // mDeviceAdminSample = new ComponentName(this, DeviceAdminSample.class);
