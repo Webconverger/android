@@ -252,6 +252,10 @@ public class MainActivity extends Activity {
                 }
             }
 
+            if (mloadingView == null || mWebView == null) {
+                return;
+            }
+
             mloadingView.setVisibility(View.GONE);
 
             // TODO: Ensure Webview reset to a clean slate
