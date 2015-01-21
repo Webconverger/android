@@ -1,3 +1,5 @@
-# TODO: Is it possible to call gradle build from the commandline?
-file ./app/build/outputs/apk/app-debug.apk
-scp ./app/build/outputs/apk/app-debug.apk sg:/srv/www/sg.webconverger.com/com.webconverger.KioskApp.apk
+curl -I https://webconverger.com/com.webconverger.KioskApp.apk
+if file ./app/build/outputs/apk/app-debug.apk
+then
+s3cmd put -m application/vnd.android.package-archive -P ./app/build/outputs/apk/app-debug.apk s3://webconverger.com/com.webconverger.KioskApp.apk
+fi

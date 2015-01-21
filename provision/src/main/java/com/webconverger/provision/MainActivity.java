@@ -8,6 +8,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,6 +35,8 @@ public class MainActivity extends Activity {
         String checksum = calcChecksum();
 
         try {
+            Log.d("Provision", "HERE");
+
             Properties p = new Properties();
             p.setProperty(DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_NAME, PACKAGE_NAME);
             p.setProperty(DevicePolicyManager.EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION, PACKAGE_DOWNLOAD_LOCATION);
@@ -45,6 +48,7 @@ public class MainActivity extends Activity {
             NfcAdapter defaultAdapter = NfcAdapter.getDefaultAdapter(this);
 
             NdefMessage msg = new NdefMessage(NdefRecord.createMime(DevicePolicyManager.MIME_TYPE_PROVISIONING_NFC, stringWriter.toString().getBytes("UTF-8")));
+            Log.d("Provision", "Pushing message");
             defaultAdapter.setNdefPushMessage(msg, this);
         } catch (Exception e) {
             throw new RuntimeException(e);
