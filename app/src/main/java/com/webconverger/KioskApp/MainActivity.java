@@ -1,5 +1,6 @@
 package com.webconverger.KioskApp;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
@@ -106,13 +107,6 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Action reset");
                 new ConfigParser().execute();
                 return true;
-            case R.id.action_unlock:
-                Log.d(TAG, "Action unlock");
-                ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-                if (activityManager.isInLockTaskMode()) {
-                    stopLockTask();
-                }
-                return true;
             default:
                 return true;
         }
@@ -196,12 +190,13 @@ public class MainActivity extends Activity {
         private Bundle parseINI(InputStream in) {
 
             Bundle bundle = new Bundle();
+
             InputStreamReader reader;
             try {
                 reader = new InputStreamReader(in, "UTF-8");
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
-                return null;
+                return bundle;
             }
             char[] buffer = new char[255];
             StringBuilder builder = new StringBuilder(255);
@@ -228,11 +223,12 @@ public class MainActivity extends Activity {
                     String[] fields = line.split("=");
                     try {
                         result = new URL(fields[1]);
-                        bundle.putString("homepage", result.toString());
+                        if (result != null) {
+                            bundle.putString("homepage", result.toString());
+                        }
                     } catch (MalformedURLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
-                        result = null;
                     }
                 }
                 if (line.startsWith("noblank")) {
@@ -245,30 +241,40 @@ public class MainActivity extends Activity {
                 }
 
             }
+            Log.d(TAG, "Returning bundle................");
             return bundle;
         }
 
         @Override
         protected void onPostExecute(Bundle bundle) {
 
-            String homepage = bundle.getString("homepage");
+            String homepage = null;
 
-            if (bundle.getBoolean("unlock", false)) {
-                Log.d(TAG, "Trying to unlock");
-                ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                if (activityManager.isInLockTaskMode()) {
-                    Log.d(TAG, "Now unlocking....");
-                    stopLockTask();
+            if (bundle != null) {
+
+                if (bundle.containsKey("unlock")) {
+                    Log.d(TAG, "Has the key");
+                    if (bundle.getBoolean("unlock")) {
+                        Log.d(TAG, "Trying to unlock");
+                        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        if (activityManager.isInLockTaskMode()) {
+                            Log.d(TAG, "Now unlocking....");
+                            stopLockTask();
+                        }
+                    }
                 }
+
+                if (bundle.containsKey("noblank") && bundle.getBoolean("noblank", false)) {
+                    Log.d(TAG, "Setting up noblank");
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+
+                // TODO: Cache result/config in case kiosk loses internet (Same behaviour as PC version)
+                homepage = bundle.getString("homepage", null);
+
             }
 
-            if (bundle.getBoolean("noblank", false)) {
-                Log.d(TAG, "Setting up noblank");
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-
-            // TODO: Cache result/config in case kiosk loses internet (Same behaviour as PC version)
-
+            
             if (homepage == null) {
                 Log.d(TAG, "Homepage not defined");
                 homepage = "https://config.webconverger.com/clients/?id=" + ID;
@@ -294,6 +300,16 @@ public class MainActivity extends Activity {
             mWebView.setVisibility(View.VISIBLE);
             // Log.d(TAG, result.toString());
             mWebView.loadUrl(homepage);
+
+            // Need to put this in a service to listen for inactivity to go full screen
+            View decorView = getWindow().getDecorView();
+            // Hide the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+            // Remember that you should never show the action bar if the
+            // status bar is hidden, so hide that too if necessary.
+            ActionBar actionBar = getActionBar();
+            actionBar.hide();
         }
     }
 

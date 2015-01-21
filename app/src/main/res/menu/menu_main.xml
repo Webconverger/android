@@ -3,12 +3,6 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_unlock"
-        android:icon="@android:drawable/btn_dialog"
-        android:showAsAction="ifRoom"
-        android:title="Unlock" />
-
-    <item
         android:id="@+id/action_reset"
         android:icon="@drawable/ic_action_daisy"
         android:showAsAction="ifRoom"
