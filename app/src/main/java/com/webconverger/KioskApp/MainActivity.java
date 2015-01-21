@@ -37,7 +37,6 @@ public class MainActivity extends Activity {
 
 
     private static final String TAG = "WEBC";
-    private final String HOMEPAGE = "homepage";
     private WebView mWebView;
     private ImageView mloadingView;
     private String ID;
@@ -53,10 +52,6 @@ public class MainActivity extends Activity {
         String macAddress = info.getMacAddress();
         ID = Build.SERIAL + ';' + macAddress;
         Log.d(TAG, "ID is: " + ID);
-
-        // Keep screen on
-        // Assuming deployment will be on a mounted Android device with power
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // TODO: Disable keyguard
 
@@ -175,10 +170,10 @@ public class MainActivity extends Activity {
 
     }
 
-    private class ConfigParser extends AsyncTask<Void, Void, URL> {
+    private class ConfigParser extends AsyncTask<Void, Void, Bundle> {
 
         @Override
-        protected URL doInBackground(Void... params) {
+        protected Bundle doInBackground(Void... params) {
 
             URL homePageUrl = null;
 
@@ -188,17 +183,19 @@ public class MainActivity extends Activity {
                 final URL configUrl = new URL("https://config.webconverger.com/clients/install-config/" + ID);
                 urlConnection = (HttpURLConnection) configUrl.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                homePageUrl = parseINI(in);
+                return parseINI(in);
             } catch (IOException ignore) {
                 // TODO: retry?
                 ignore.printStackTrace();
             } finally {
                 urlConnection.disconnect();
             }
-            return homePageUrl;
+            return null;
         }
 
-        private URL parseINI(InputStream in) {
+        private Bundle parseINI(InputStream in) {
+
+            Bundle bundle = new Bundle();
             InputStreamReader reader;
             try {
                 reader = new InputStreamReader(in, "UTF-8");
@@ -225,33 +222,56 @@ public class MainActivity extends Activity {
             // Log.d(TAG, config);
             String[] lines = config.split("\n");
             for (String line : lines) {
-                // Log.d(TAG, line);
-                if (line.startsWith(HOMEPAGE)) {
+                Log.d(TAG, line);
+                if (line.startsWith("homepage")) {
+                    Log.d(TAG, "Parsing homepage");
                     String[] fields = line.split("=");
                     try {
                         result = new URL(fields[1]);
+                        bundle.putString("homepage", result.toString());
                     } catch (MalformedURLException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                         result = null;
                     }
                 }
+                if (line.startsWith("noblank")) {
+                    bundle.putBoolean("noblank", true);
+
+                }
+                if (line.startsWith("unlock")) {
+                    bundle.putBoolean("unlock", true);
+
+                }
+
             }
-            return result;
+            return bundle;
         }
 
         @Override
-        protected void onPostExecute(URL result) {
+        protected void onPostExecute(Bundle bundle) {
+
+            String homepage = bundle.getString("homepage");
+
+            if (bundle.getBoolean("unlock", false)) {
+                Log.d(TAG, "Trying to unlock");
+                ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                if (activityManager.isInLockTaskMode()) {
+                    Log.d(TAG, "Now unlocking....");
+                    stopLockTask();
+                }
+            }
+
+            if (bundle.getBoolean("noblank", false)) {
+                Log.d(TAG, "Setting up noblank");
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
 
             // TODO: Cache result/config in case kiosk loses internet (Same behaviour as PC version)
 
-            if (result == null) {
-                try {
-                    result = new URL("https://config.webconverger.com/clients/?id=" + ID);
-                } catch (MalformedURLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+            if (homepage == null) {
+                Log.d(TAG, "Homepage not defined");
+                homepage = "https://config.webconverger.com/clients/?id=" + ID;
             }
 
             if (mloadingView == null || mWebView == null) {
@@ -273,7 +293,7 @@ public class MainActivity extends Activity {
 
             mWebView.setVisibility(View.VISIBLE);
             // Log.d(TAG, result.toString());
-            mWebView.loadUrl(result.toString());
+            mWebView.loadUrl(homepage);
         }
     }
 
