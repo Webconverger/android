@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
@@ -33,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Timer;
 
 
 public class MainActivity extends Activity {
@@ -42,12 +44,15 @@ public class MainActivity extends Activity {
     private WebView mWebView;
     private ImageView mloadingView;
     private String ID;
+    private Timer t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Not sure about this
         super.onCreate(savedInstanceState);
+
+        // t = new Timer();
+
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -72,6 +77,19 @@ public class MainActivity extends Activity {
         mloadingView = (ImageView) findViewById(R.id.loading);
 
         mWebView = (WebView) findViewById(R.id.kiosk_webview);
+
+        // Show action bar when interacted with, in order to expose reset button
+        mWebView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ActionBar actionBar = getActionBar();
+
+                if (event.getAction() == MotionEvent.ACTION_MOVE && !actionBar.isShowing()) {
+                    actionBar.show();
+                }
+                return false;
+            }
+        });
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -322,6 +340,8 @@ public class MainActivity extends Activity {
             actionBar.hide();
         }
     }
+
+
 
 
 }
