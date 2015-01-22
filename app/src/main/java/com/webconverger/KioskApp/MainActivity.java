@@ -48,13 +48,15 @@ public class MainActivity extends Activity {
         // Not sure about this
         super.onCreate(savedInstanceState);
 
+        // Try avoid initial lock screen
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
+        // Get the Mac address of the wifi to build up machine identity
         WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo info = manager.getConnectionInfo();
         String macAddress = info.getMacAddress();
         ID = Build.SERIAL + ';' + macAddress;
         Log.d(TAG, "ID is: " + ID);
-
-        // TODO: Disable keyguard
 
         // Setup layout
         setContentView(R.layout.activity_main);
