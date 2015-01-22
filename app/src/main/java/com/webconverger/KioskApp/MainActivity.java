@@ -6,6 +6,7 @@ import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -47,6 +48,13 @@ public class MainActivity extends Activity {
 
         // Not sure about this
         super.onCreate(savedInstanceState);
+
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            getActionBar().setTitle(getResources().getString(R.string.app_name) + " " + pInfo.versionName);
+        } catch (Exception e) {
+
+        }
 
         // Try avoid initial lock screen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -276,7 +284,7 @@ public class MainActivity extends Activity {
 
             }
 
-            
+
             if (homepage == null) {
                 Log.d(TAG, "Homepage not defined");
                 homepage = "https://config.webconverger.com/clients/?id=" + ID;
