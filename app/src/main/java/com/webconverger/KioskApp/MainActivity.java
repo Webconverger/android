@@ -71,6 +71,9 @@ public class MainActivity extends Activity {
         ID = Build.SERIAL + ';' + macAddress;
         Log.d(TAG, "ID is: " + ID);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         // Setup layout
         setContentView(R.layout.activity_main);
 
@@ -116,6 +119,9 @@ public class MainActivity extends Activity {
         // Flash id
         Toast.makeText(this, ID, Toast.LENGTH_LONG).show();
 
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
+
     }
 
     @Override
@@ -143,11 +149,13 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (mWebView.canGoBack() == true) {
-            mWebView.goBack();
-        } else {
-            MainActivity.super.onBackPressed();
-        }
+        try {
+            if (mWebView.canGoBack() == true) {
+                mWebView.goBack();
+            } else {
+                MainActivity.super.onBackPressed();
+            }
+        }  catch (Exception e) {    }
     }
 
     @Override
