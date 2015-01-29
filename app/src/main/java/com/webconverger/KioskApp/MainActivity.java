@@ -87,14 +87,21 @@ public class MainActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 ActionBar actionBar = getActionBar();
 
-                if (event.getAction() == MotionEvent.ACTION_MOVE && !actionBar.isShowing()) {
-                    actionBar.show();
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    // TODO: Reset timer
+                    if (!actionBar.isShowing()) {
+                        actionBar.show();
+                    }
                 }
                 return false;
             }
         });
 
         WebSettings webSettings = mWebView.getSettings();
+
+        // http://stackoverflow.com/a/14062315/4534
+        webSettings.setSaveFormData(false);
+
         webSettings.setJavaScriptEnabled(true);
         // Make links clickable
         mWebView.setWebViewClient(new WebViewClient());
@@ -327,6 +334,7 @@ public class MainActivity extends Activity {
             mWebView.clearCache(true);
             mWebView.clearHistory();
             mWebView.clearFormData();
+
 
             // http://developer.android.com/reference/android/webkit/CookieManager.html
             CookieManager cm = CookieManager.getInstance();
