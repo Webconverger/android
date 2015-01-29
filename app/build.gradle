@@ -20,7 +20,7 @@ android {
         applicationId "com.webconverger.KioskApp"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 1
+        versionCode 3
         versionName getVersionName()
     }
     buildTypes {
