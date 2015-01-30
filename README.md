@@ -1,4 +1,4 @@
-**UNDER DEVELOPMENT** -- NOT FOR USE YET
+[Play store listing](https://play.google.com/store/apps/details?id=com.webconverger.KioskApp)
 
 # Why is Webconverger better than the competition?
 
@@ -9,9 +9,12 @@ Locked down with [Android
 5.0](http://developer.android.com/about/versions/android-5.0.html) features
 such as Managed provisioning over NFC & [Screen
 Pinning](http://developer.android.com/about/versions/android-5.0.html#ScreenPinning).
+The con is that this App **only works on Android 5.0** currently.
 
 "Managed provisioning over NFC" should help setup many devices quickly without
-need for a Google Account.
+need for a Google Account. This also has the added benefit of [not getting
+stuck on the lock
+screen](https://code.google.com/p/android/issues/detail?id=77775).
 
 # Development setup and dependencies
 
@@ -25,8 +28,8 @@ Using Android Studio 1.0.2 and Android 5.0 (Lollipop)
 
 Not Opensource:
 
-* [Android Kiosk](http://www.android-kiosk.com/) - 5GBP
-* Android Kioware - don't publish their pricing
+* [Android Kiosk](http://www.android-kiosk.com/)
+* Android Kioware
 
 # Configuration service business model
 
