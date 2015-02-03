@@ -1,4 +1,6 @@
-[Play store listing](https://play.google.com/store/apps/details?id=com.webconverger.KioskApp)
+* [Play store listing](https://play.google.com/store/apps/details?id=com.webconverger.KioskApp)
+* [Developer's diary](http://dabase.com/android/Nexus_Seven/)
+* [Bug list](https://github.com/webconverger/android/issues)
 
 # Why is Webconverger better than the competition?
 
